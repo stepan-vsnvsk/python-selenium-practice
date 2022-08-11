@@ -1,0 +1,1 @@
+{"format": "%(asctime)-5s:%(levelname)-5s:%(message)-5s", "filemode": "w", "path": "project/tests/logs/"}
