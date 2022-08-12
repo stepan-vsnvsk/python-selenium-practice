@@ -1,1 +1,1 @@
-{"URL": "http://localhost:8080/web", "browser": "chrome", "wait_timeout": 15, "wait_timeout_firefox": 25, "flags": {"incognito": "True", "maximize_window": "True"}, "language": "en-US", "test_dir": "project/tests/test_data/"}
+{"URL": "http://localhost:8080/web", "browser": "chrome", "wait_timeout": 120, "wait_timeout_firefox": 25, "flags": {"incognito": "True", "maximize_window": "True"}, "test_dir": "project/tests/test_data/"}

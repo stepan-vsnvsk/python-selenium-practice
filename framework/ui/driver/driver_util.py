@@ -57,3 +57,10 @@ class DriverUtil(metaclass=Singletone):
         Logger.info(f"Add a cookie: {cookie}")
         webdriver = DriverUtil.get_instance()
         webdriver.add_cookie(cookie)
+
+    @staticmethod
+    def navigate_back():
+        """Get back to previous page."""
+        Logger.info(f"Navigate back to previous page.")
+        webdriver = DriverUtil.get_instance()
+        webdriver.back()   

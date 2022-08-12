@@ -55,10 +55,10 @@ class BaseElement:
 
     def click(self):
         """Perform click action on a element."""
-
+        
         Logger.info(f"Click {self.name}")
         return Waits.wait_until_clickable(self).click()
-
+        
     def get_text(self):
         """Find element and get text.
 

@@ -53,4 +53,4 @@ class MakeRequest:
         """
 
         response = requests.post(url, data=data, params=params, files=files, headers=headers, auth=auth, verify=verify)
-        return response.content
+        return response.text
