@@ -1,0 +1,33 @@
+Test case #1 is started
+Step 1: Navigate to home page
+Navigate to https://userinyerface.com/
+Check if we on HomePage
+Step 2: Click the link to navigate the next page.
+Click Link to next page on on Home page
+Check if we on PasswordForm
+Step 3: Input  password, email, accept the terms of use and click 'next' button.
+Clear Field on Password form
+Find Field on Password form
+Send gJ58DGg3gFR9L to Field on Password form
+Find Field on Password form
+Clear Field on Password form
+Find Field on Password form
+Send gRgmo1o6SPaOa to Field on Password form
+Find Field on Password form
+Clear Field on Password form
+Find Field on Password form
+Send kisN9teSPIsQQ to Field on Password form
+Find Field on Password form
+Click Dropdown list opener with domains on on Password form
+Find List with domains to select on Password form elements
+Click Terms accept checkbox on Password form
+Click Link to next form on Password form
+Check if we on ImageForm
+Step 4: Choose 2 random interest, upload image, click 'Next' button.
+Click Link for uploading avatar on Image/Interests form
+Click Unselect all checkboxes for interests on Image/Interests form
+Find All checkboxes for interests on Image/Interests form elements
+Find Select all checkboxes for interests on Image/Interests form
+Find Unselect all checkboxes for interests on Image/Interests form
+Click Button for going to next form on Image/Interests form
+Check if we on PersonInfoForm

@@ -1,8 +1,6 @@
 from framework.ui.driver.browser_factory import BrowserFactory
 from framework.ui.driver.singletone import Singletone
-from framework.util.logger import Logger
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from framework.utils.logger import Logger
 
 
 class DriverUtil(metaclass=Singletone):
@@ -28,7 +26,6 @@ class DriverUtil(metaclass=Singletone):
     @staticmethod
     def close_browser():
         """Quit browser/driver."""
-
         DriverUtil._webdriver.quit()
 
     @staticmethod
@@ -46,7 +43,6 @@ class DriverUtil(metaclass=Singletone):
     @staticmethod
     def refresh_page():
         """Reload a page."""
-
         Logger.info(f"Refresh a page")
         webdriver = DriverUtil.get_instance()
         webdriver.refresh()
@@ -63,4 +59,11 @@ class DriverUtil(metaclass=Singletone):
         """Get back to previous page."""
         Logger.info(f"Navigate back to previous page.")
         webdriver = DriverUtil.get_instance()
-        webdriver.back()   
+        webdriver.back()
+
+    @staticmethod
+    def get_screenshot_as_base64():
+        """Gets a screenshot of the current window as a base64 encoded string."""
+        Logger.info("Make a current page screenshot as bas64-encoded string")
+        webdriver = DriverUtil.get_instance()
+        return webdriver.get_screenshot_as_base64()

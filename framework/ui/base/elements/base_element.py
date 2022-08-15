@@ -1,8 +1,8 @@
 from selenium.common.exceptions import NoSuchElementException
-from framework.ui.driver.driver_util import DriverUtil
-from framework.ui.driver.driver_util_waits import Waits
-from framework.util.config_manager import ConfigManager
-from framework.util.logger import Logger
+from framework.ui.driver.driver_utils.driver_util import DriverUtil
+from framework.ui.driver.driver_utils.driver_util_waits import Waits
+from framework.utils.config_manager import ConfigManager
+from framework.utils.logger import Logger
 
 
 class BaseElement:
@@ -69,3 +69,9 @@ class BaseElement:
         Logger.info(f"Get text from {self.name}")
         Waits.wait_presence_of_element(self)
         return self.browser.find_element(*self.locator).text
+
+    def click_js(self):
+        """Perform click action directly with JS."""
+        element = self.browser.find_element()
+        Logger.info(f"Execute {self.name} with JS")
+        self.browser.execute_script("arguments[0].click();", element)

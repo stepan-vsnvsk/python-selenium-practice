@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
-from framework.util.config_manager import ConfigManager
+from framework.utils.config_manager import ConfigManager
 
 
 class BrowserFactory:

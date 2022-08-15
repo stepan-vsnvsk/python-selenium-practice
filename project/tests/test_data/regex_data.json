@@ -1,0 +1,1 @@
+{"test_name_starts": "[A-Z]{2}-\\d{4}.*", "timestamp_ends": ".\\d{3}", "test_name_group": "([A-Z]{2}-.*)", "method_group": "(com\\..*)", "status_group": "([A-Z][a-z]*)", "status_in_progress_group": "([A-Z][a-z]\\s[a-z]*)", "time_group": "(\\d{4}-.*?\\.\\d{1})", "duration_group": "(.*\\.\\d{3})", "space": "\\s"}

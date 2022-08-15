@@ -1,8 +1,8 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from framework.ui.driver.driver_util import DriverUtil
-from framework.util.config_manager import ConfigManager
-from framework.util.logger import Logger
+from framework.ui.driver.driver_utils.driver_util import DriverUtil
+from framework.utils.config_manager import ConfigManager
+from framework.utils.logger import Logger
 
 
 class Waits:
@@ -78,3 +78,8 @@ class Waits:
         Logger.info(f'Wait until {element.name} will be visible')
         WebDriverWait(Waits._driver, timeout=Waits.timeout).until(
             EC.visibility_of_element_located(element.locator))
+
+    @staticmethod
+    def wait_new_window():
+        WebDriverWait(Waits._driver, timeout=Waits.timeout).until( 
+            EC.number_of_windows_to_be(2))  

@@ -1,4 +1,4 @@
-from framework.util.json_util import JsonUtils
+from framework.utils.json_utils import JsonUtils
 
 
 class ConfigManager:

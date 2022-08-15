@@ -1,7 +1,11 @@
+from framework.utils.str_utils import StrUtils
+
+
 class TestModel:
     _allowed_attr = ['duration', 'method', 'name', 'startTime', \
-                     'start_time', 'endTime', 'end_time', 'status']
-
+                     'start_time', 'endTime', 'end_time', 'status', \
+                     'sid', 'project', 'host', 'browser']
+    
     def __init__(self, test_data):        
         for key, value in test_data.items():
             if key in self._allowed_attr:
@@ -25,3 +29,10 @@ class TestModel:
         for k, v in self.__dict__.items():
             attr += str(k) + ': ' + str(v) + '\n'        
         return f"Test:\n{attr}"
+
+    @staticmethod
+    def generate_mock_object():
+        """Create poor class' instance with proper attributes."""
+        attributes = ['sid', 'project', 'name', 'method', 'host']        
+        data_for_test_obj = {k : StrUtils.generate_text() for k in attributes}
+        return TestModel(data_for_test_obj)

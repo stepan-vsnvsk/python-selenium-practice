@@ -1,5 +1,5 @@
 from framework.ui.base.elements.base_element import BaseElement
-from framework.util.logger import Logger
+from framework.utils.logger import Logger
 
 
 class TextField(BaseElement):
