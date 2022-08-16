@@ -9,7 +9,6 @@ class ConfigManager:
     @staticmethod
     def parse_config_for_driver(config='config.json'):
         """Parse data for Webdriver's settings ."""
-
         if not ConfigManager._config:
             ConfigManager._config = JsonUtils.read_from_json(config) 
         options = []
@@ -25,10 +24,8 @@ class ConfigManager:
             options.append("--lang=" + ConfigManager._config['language'])
         return options, methods
 
-
     @staticmethod
     def get_value_from_config(key, config='config.json'):        
         """Get specific value by key from config data."""
-        
         data = JsonUtils.read_from_json(config)
         return data.get(key) 

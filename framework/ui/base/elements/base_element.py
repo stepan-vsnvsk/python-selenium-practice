@@ -9,11 +9,16 @@ class BaseElement:
     """
     Base class for all Element's classes
     """
-    
+    browser = None
+
     def __init__(self, loc, name_elem):
         self.locator = loc
         self.name = name_elem
-        self.browser = DriverUtil.get_instance()               
+
+    @staticmethod
+    def setup():
+        """Set driver."""
+        BaseElement.browser = DriverUtil.get_instance()                       
 
     def find_element(self):
         """Wait of element presence and find webelement.
@@ -69,9 +74,3 @@ class BaseElement:
         Logger.info(f"Get text from {self.name}")
         Waits.wait_presence_of_element(self)
         return self.browser.find_element(*self.locator).text
-
-    def click_js(self):
-        """Perform click action directly with JS."""
-        element = self.browser.find_element()
-        Logger.info(f"Execute {self.name} with JS")
-        self.browser.execute_script("arguments[0].click();", element)

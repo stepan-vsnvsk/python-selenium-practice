@@ -1,5 +1,6 @@
 from framework.ui.driver.driver_utils.driver_util import DriverUtil
 from framework.ui.driver.driver_utils.driver_util_waits import Waits
+from framework.utils.config_manager import ConfigManager
 from framework.utils.logger import Logger
 
 
@@ -7,6 +8,7 @@ class BaseForm:
     """
     Base class for Pages'/ Form's classes
     """   
+
     def is_page_open(self):
         """Check whether page is opened.
 
@@ -19,6 +21,6 @@ class BaseForm:
         elem_list = browser.find_elements(*self.unique_element.locator)
         return len(elem_list) > 0        
 
-    def wait_until_page_will_appear(self):        
-        # Waits.wait_presence_of_element(self.unique_element)
+    def wait_until_page_will_appear(self):
+        self.unique_element.timeout = ConfigManager.get_value_from_config('wait_page_to_load')
         Waits.wait_presence_of_all_elements(self.unique_element)

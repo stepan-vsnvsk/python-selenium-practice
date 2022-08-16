@@ -1,10 +1,11 @@
-import os
-import json 
 from json.decoder import JSONDecodeError
 from framework.api.request import MakeRequest
+from framework.api.request_utils import MakeRequestUtils
 from project.models.test import TestModel 
 
+
 class UnionReportingAPIUtils:
+    """Functions to work with Union Reporting HTTP API."""
 
     @staticmethod
     def setup(api_scheme):
@@ -16,8 +17,7 @@ class UnionReportingAPIUtils:
         UnionReportingAPIUtils.ADD_LOG_TO_TEST = api_scheme['ADD_LOG_TO_TEST']
         UnionReportingAPIUtils.ADD_ATTACHMENT_TO_TEST = api_scheme['ADD_ATTACHMENT_TO_TEST']
 
-
-    staticmethod
+    @staticmethod
     def get_token(variant):
         url = UnionReportingAPIUtils.URL + UnionReportingAPIUtils.GET_TOKEN       
         data = {
@@ -28,22 +28,20 @@ class UnionReportingAPIUtils:
         
     @staticmethod
     def get_list_of_project_tests(project_id):
+        """
+        API method 'GET_PROJECT_TESTS_JSON' is unstable.
+        It might return as a content xml or text instead of json.
+        """
+
         url = UnionReportingAPIUtils.URL + UnionReportingAPIUtils.GET_PROJECT_TESTS_JSON       
         data = {
                 'projectId': str(project_id),               
                 }
-        response = MakeRequest.post(url=url, data=data)
-        print('STATUSCODE: ', response.status_code)
-        print('HEADERS: ', (response.headers))
-        print('CONTENT: ', response.text)
+        response = MakeRequest.post(url=url, data=data)        
         try:
             return [TestModel(test_data) for test_data in response.json()]
         except JSONDecodeError:
-             assert False
-
-        # temp = response.text
-        # tests_response = json.loads(temp) #! move to separate method /requests or utils      
-        # return [TestModel(test_data) for test_data in tests_response]        
+            return False           
 
     @staticmethod
     def add_new_test(testmodel_object):
@@ -78,7 +76,7 @@ class UnionReportingAPIUtils:
                 'isException': is_exception                                         
                 }
         response = MakeRequest.post(url=url, data=data)
-        return response.status_code 
+        return MakeRequestUtils.check_is_code_ok(response.status_code)
 
     @staticmethod
     def add_attachment_to_test(test_id, attachment, attachment_type='image/png'):
@@ -89,8 +87,4 @@ class UnionReportingAPIUtils:
                 'contentType': attachment_type                                         
                 }
         response = MakeRequest.post(url=url, data=data)
-        return response.status_code
-
-    """
-    if r.status_code == requests.codes.ok:
-    """
+        return MakeRequestUtils.check_is_code_ok(response.status_code)

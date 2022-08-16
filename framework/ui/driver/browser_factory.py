@@ -1,13 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
 from framework.utils.config_manager import ConfigManager
 
 
 class BrowserFactory:
-    BROWSERS = ['chrome', 'firefox']
+    BROWSERS = ['chrome']
     
     @staticmethod
     def browser_initialization():
@@ -27,10 +25,4 @@ class BrowserFactory:
                 if config_options:
                     [options.add_argument(i) for i in config_options]
                 return webdriver.Chrome(service=ChromeService(
-                    ChromeDriverManager().install()), options=options)
-            if config_browser == 'firefox':
-                options = webdriver.FirefoxOptions()
-                if config_options:            
-                    [options.add_argument(i) for i in config_options]
-                return webdriver.Firefox(service=FirefoxService(
-                    GeckoDriverManager().install()), options=options)
+                    ChromeDriverManager().install()), options=options)            

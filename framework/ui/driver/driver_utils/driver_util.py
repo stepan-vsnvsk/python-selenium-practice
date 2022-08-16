@@ -52,7 +52,8 @@ class DriverUtil(metaclass=Singletone):
         """Add cookie to a browser context."""
         Logger.info(f"Add a cookie: {cookie}")
         webdriver = DriverUtil.get_instance()
-        webdriver.add_cookie(cookie)
+        for k, v in cookie.items():
+            webdriver.add_cookie({'name': k, 'value': v})
 
     @staticmethod
     def navigate_back():

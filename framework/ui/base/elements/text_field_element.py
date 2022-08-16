@@ -19,6 +19,5 @@ class TextField(BaseElement):
 
     def clear(self):
         """Find element and resets it's content."""
-                
         Logger.info(f"Clear {self.name}")
         self.find_element().clear()

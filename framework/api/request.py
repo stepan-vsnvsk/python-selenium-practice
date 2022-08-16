@@ -16,8 +16,7 @@ class MakeRequest:
         """
 
         log.info(f"Make HTTP API GET request to {url}")
-        return requests.get(url, params=params, headers=headers, auth=auth, verify=verify)        
-
+        return requests.get(url, params=params, headers=headers, auth=auth, verify=verify)
 
     @staticmethod
     def post(url, data={}, params={}, headers={}, files=None, auth=None, verify=False):

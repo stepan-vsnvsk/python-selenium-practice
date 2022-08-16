@@ -51,4 +51,11 @@ class DriverUtilWindow:
 
         Logger.info(f"Switch to original window {window_id}")
         webdriver = DriverUtil.get_instance()
-        webdriver.switch_to.window(window_id)  
+        webdriver.switch_to.window(window_id) 
+
+    @staticmethod
+    def get_number_of_opened_windows():
+        """Check how many windows/tabs is opened already."""
+        Logger.info(f"Check number of opened windows/tabs")
+        webdriver = DriverUtil.get_instance()
+        return len(webdriver.window_handles)

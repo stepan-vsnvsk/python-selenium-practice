@@ -14,10 +14,11 @@ class StrUtils:
         Returns:
             (str).
         """
+
         length = random.randint(13, 31)
         more_vowels = 'aeiouy'
-        random_source = string.ascii_lowercase + more_vowels + ' '
-        return ''.join([random.choice(random_source) for _ in range(length)])
+        random_source = string.ascii_lowercase + more_vowels        
+        return ''.join([random.choice(random_source) for _ in range(length)])        
 
     @staticmethod
     def read_text(filepath, encoding='utf-8', errors=None):
