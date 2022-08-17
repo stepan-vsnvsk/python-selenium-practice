@@ -5,26 +5,26 @@ from project.pages.add_project_page import AddProjectPage
 from project.models.test import TestModel
 from framework.ui.driver.driver_utils.driver_util import DriverUtil
 from framework.ui.driver.driver_utils.driver_util_window import DriverUtilWindow
-from framework.utils.config_manager import ConfigManager
+from framework.api.request_utils import MakeRequestUtils
 from framework.utils.logger import Logger as log
 from framework.utils.str_utils import StrUtils
+from framework.utils.json_utils import JsonUtils
 from framework.utils.list_utils import ListUtil
 
 
-class TestNexageAPI:    
-    def test_case_get_nexage_tests_add_new_project_post_new_test(
-                                    self, test_data, projects_id, basic_auth_url):
-        log.info("Test case 'Get Nexage tests / Add new project / Post new test' is started.")
-        log.info("Step #1: [API] Запросом к апи получить токен согласно номеру варианта.")
+class TestUnionReportingAPI:    
+    def test_case_get_tests_add_new_project_post_new_test(self, test_data, basic_auth_url):
+        log.info("Test case 'Get tests / Add new project / Post new test' is started.")
+        log.info("Step #1: [API] Get a token (according to the variant) with HTTP API-querie.")
         variant = test_data['variant']        
-        token = UnionReportingAPIUtils.get_token(variant)                      
+        token = UnionReportingAPIUtils.get_token(variant).text                           
         assert token, \
             "Can't generate token " \
             "Expected result: token is generated."
         
-        log.info("Step #2: [UI] Перейти на сайт. Пройти необходимую авторизацию. "  
-                 "С помощью cookie передать сгенерированный на шаге 1 токен. "
-                 "Обновить страницу.")        
+        log.info("Step #2: [UI] Navigate to the site. Go through the authorisation. "  
+                 "Pass generated token as a cookie. "
+                 "Refresh the page.")        
         DriverUtil.navigate_to(basic_auth_url)               
         projects_page = ProjectsPage()
         projects_page.wait_until_page_will_appear()
@@ -41,19 +41,19 @@ class TestNexageAPI:
             "Expected result: Number on a footer equals to token's variant. " \
             f"Actual result: version from page: {version}, token's variant: {variant}"
 
-        log.info("Step #3: [UI] Перейти на страницу проекта Nexage. "  
-                 "[API] Запросом к апи получить список тестов в JSON-XML-формате.")
-        nexage_project_id = projects_id['Nexage']
-        projects_page.click_project_page_by_id(nexage_project_id)
-        nexage_page = AllTestsPage()
-        nexage_page.wait_until_page_will_appear()
-        nexage_tests_ui = nexage_page.get_all_tests_per_page()
-        nexage_tests_api = UnionReportingAPIUtils.get_list_of_project_tests(nexage_project_id)       
-        assert nexage_tests_api, \
+        log.info("Step #3: [UI] Navigate to Nexage project page. "  
+                 "[API] Get list of tests with API-querie in json.")
+        project_id = test_data['testing_project_id']              
+        projects_page.click_project_page_by_id(project_id)
+        all_tests_page = AllTestsPage()
+        all_tests_page.wait_until_page_will_appear()
+        project_tests_ui = all_tests_page.get_all_tests_per_page()
+        project_tests_api_response = UnionReportingAPIUtils.get_list_of_project_tests(project_id)        
+        assert JsonUtils.check_is_that_json(project_tests_api_response.content), \
             "Didn't get json-formatted data about project's tests through HTTP API. " \
             "Expected result: API method returns json-formatted list of project's tests"
-
-        start_times = [test.start_time for test in nexage_tests_ui]
+        project_tests_api = [TestModel(test_data) for test_data in project_tests_api_response.json()]
+        start_times = [test.start_time for test in project_tests_ui]
         is_start_times_sorted = ListUtil.check_order(start_times, reverse=True)        
         assert is_start_times_sorted, \
             "Test's aren't sorted in decreasing by time order " \
@@ -61,8 +61,8 @@ class TestNexageAPI:
             f"Actual result: {start_times}"
 
         failed_during_comparisons = []
-        for test_ui in nexage_tests_ui:
-            test_api = next((test_api for test_api in nexage_tests_api
+        for test_ui in project_tests_ui:
+            test_api = next((test_api for test_api in project_tests_api
                             if test_ui.name == test_api.name), None)
             if test_ui != test_api:
                 failed_during_comparisons.append((test_ui, test_api))
@@ -72,10 +72,9 @@ class TestNexageAPI:
             f"Actual result: from UI: {[x() for x,y in failed_during_comparisons]} " \
             f"Actual result: from API:  {[y() for x,y in failed_during_comparisons]}"
         
-        log.info("Step #4: [UI] Вернуться на предыдущую страницу в браузере. "
-                 "Нажать на +Add. Ввести название проекта и сохранить. "
-                 "Для закрытия окна добавления проекта вызвать js-метод closePopUp(). "
-                 "Обновить страницу.")
+        log.info("Step #4: [UI] Navigate back to previous page. "
+                 "Click on +Add. Enter project's name and save. "
+                 "Close the window. Refresh the page")
         DriverUtil.navigate_back()
         mock_test_obj = TestModel.generate_mock_object()  
         original_window_id = DriverUtilWindow.original_window_id()
@@ -83,20 +82,17 @@ class TestNexageAPI:
         add_project_page = AddProjectPage()
         DriverUtilWindow.switch_to_new_window(original_window_id)        
         add_project_page.send_name_for_new_project(mock_test_obj.project)
-        add_project_page.click_submit_new_project_name()
-        new_project_saved = add_project_page.is_message_new_project_saved_appeared()
-        assert new_project_saved, \
+        add_project_page.click_submit_new_project_name()        
+        assert add_project_page.is_message_new_project_saved_appeared(), \
             "New project wasn't saved " \
             "Expected result: Message about successful saving is shown"
         DriverUtilWindow.close_tab()        
-        DriverUtilWindow.switch_to_original_window(original_window_id)
-        opened_tabs = DriverUtilWindow.get_number_of_opened_windows()
-        form_is_there = add_project_page.is_add_new_project_form_displayed()
-        assert opened_tabs == 1, \
+        DriverUtilWindow.switch_to_original_window(original_window_id)             
+        assert DriverUtilWindow.get_number_of_opened_windows() == 1, \
             "Page for adding new project is still opened" \
             "Expected result: 'Add new project' page is closed, there should be only one opened tab" \
             f"Actual result: opened tabs {opened_tabs}"
-        assert not form_is_there, \
+        assert not add_project_page.is_add_new_project_form_displayed(), \
             "Form for adding new project is still shown" \
             "Expected result: Add new project page is closed"
 
@@ -112,22 +108,25 @@ class TestNexageAPI:
             "Expected result: Name from web-page is equal to a entered name through a form" \
             f"Actual result:  Web-page: {newly_project_name_ui}, entered one: {mock_test_obj.project}"
 
-        log.info("Step #5: [UI] Перейти на страницу созданного проекта. "
-                 "[API] Добавить тест через API (вместе с логом и скриншотом текущей страницы).")  
+        log.info("Step #5: [UI] Navigate to the newly created project's page. "
+                 "[API] Add test through HTTP API (with log and screenshot of a current page).")  
         projects_page.click_project_page_by_id(total_projects_after)
-        test_id = UnionReportingAPIUtils.add_new_test(mock_test_obj)
-        log_content = StrUtils.read_text(test_data['log_to_send_path'])        
-        response_ok_log = UnionReportingAPIUtils.add_log_to_test(test_id, log_content)
-        screenshot_encoded = DriverUtil.get_screenshot_as_base64()        
-        response_ok_attach = UnionReportingAPIUtils.add_attachment_to_test(test_id, screenshot_encoded)        
-        assert response_ok_log, \
-            "Request for adding log to a test wasn't successful. " \
-            "Expected result: Response code is in 'okay codes'"         
-        assert response_ok_attach, \
-            "Request for adding screenshot to a test wasn't successful. " \
-            "Expected result: Response code is in 'okay codes'"
-        tests_page = AllTestsPage()
-        test_is_there = tests_page.wait_until_that_test_will_be_shown(test_id)        
-        assert test_is_there, \
+        UnionReportingAPIUtils.post_new_test(mock_test_obj)
+        mock_test_obj.add_log(test_data['log_to_send_path'])
+        log_response_code = UnionReportingAPIUtils.attach_log_to_test(mock_test_obj)
+        screenshot_encoded = DriverUtil.get_screenshot_as_base64()
+        mock_test_obj.attachment = screenshot_encoded       
+        screenshot_response_code = UnionReportingAPIUtils.add_attachment_to_test(mock_test_obj)        
+        assert MakeRequestUtils.check_status_code(log_response_code, 
+                                                  test_data['expected_ok_response_code']), \
+               "Request for adding log to a test wasn't successful. " \
+               "Expected result: Response code is in 'okay codes'"         
+        assert MakeRequestUtils.check_status_code(screenshot_response_code, 
+                                                  test_data['expected_ok_response_code']), \
+               "Request for adding screenshot to a test wasn't successful. " \
+               "Expected result: Response code is in 'okay codes'"
+        tests_page = AllTestsPage()            
+        assert tests_page.wait_until_that_test_will_be_shown(mock_test_obj.test_id), \
             "Test is not shown. " \
             "Expected result: Test is shown on a project's all tests page. "
+        

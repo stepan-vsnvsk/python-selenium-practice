@@ -72,7 +72,7 @@ class UnionReportingRegexpUtils:
                                                 end_time=match.group(5),
                                                 duration=match.group(6)
                                             )
-            else:  # 'In progress' tests
+            else:
                 in_progress_match = re.search(pattern_for_tests_in_progress, test_string_to_parse)
                 list_of_tests[enum] = dict(
                                                 name=in_progress_match.group(1),

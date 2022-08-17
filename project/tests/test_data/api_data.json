@@ -1,1 +1,1 @@
-{"URL": "http://localhost:8080/api", "GET_TOKEN": "/token/get", "GET_PROJECT_TESTS_JSON": "/test/get/json", "POST_NEW_TEST":"/test/put", "ADD_LOG_TO_TEST":"/test/put/log", "ADD_ATTACHMENT_TO_TEST":"/test/put/attachment"}
+{"BASE_URL": "http://localhost:8080/api"}

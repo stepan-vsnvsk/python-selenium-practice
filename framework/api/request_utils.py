@@ -6,7 +6,6 @@ class MakeRequestUtils:
     """Utility functions to work with request/response."""
 
     @staticmethod
-    def check_is_code_ok(status_code):
-        log.info(f"Check whether request was successfull")
-        return status_code == requests.codes.ok
-        
+    def check_status_code(status_code, expected=200):
+        log.info(f"Check whether response's status code is {expected} ")
+        return int(status_code) == int(expected)

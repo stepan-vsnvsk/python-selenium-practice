@@ -4,10 +4,10 @@ from framework.utils.str_utils import StrUtils
 
 class TestModel:
     """Data class for a test."""
-    __test__ = False  # for pytest to ignore class
+    __test__ = False
 
-    _allowed_attr = ['duration', 'method', 'name', 'startTime', 'start_time', 'endTime',
-                     'end_time', 'status', 'sid', 'project', 'host', 'browser']
+    _allowed_attr = ['duration', 'method', 'name', 'startTime', 'start_time', 'endTime', 'end_time', 
+                     'status', 'sid', 'project', 'host', 'browser', 'test_id', 'log', 'attachment']
     
     def __init__(self, test_data):        
         for key, value in test_data.items():
@@ -19,7 +19,7 @@ class TestModel:
                     setattr(self, 'end_time', value)
                     continue
                 else:
-                    setattr(self, key, value)
+                    setattr(self, key, value)        
 
     def __eq__(self, other_user):
         if type(self) == type(other_user):
@@ -35,6 +35,10 @@ class TestModel:
 
     def __call__(self):
         return sys.stdout.write(str(self))
+
+    def add_log(self, logfile):
+        log_content = StrUtils.read_text(logfile)
+        self.log = log_content
 
     @staticmethod
     def generate_mock_object():

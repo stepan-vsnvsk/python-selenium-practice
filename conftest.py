@@ -51,8 +51,9 @@ def test_dir_path():
 @pytest.fixture(scope='session', autouse=True)
 def project_api_scheme_init(test_dir_path):
     """Set Union Reporting API scheme methods."""       
-    api_scheme = JsonUtils.read_from_json(test_dir_path + 'api_data.json')
-    UnionReportingAPIUtils.setup(api_scheme)
+    api_data = JsonUtils.read_from_json(test_dir_path + 'api_data.json')
+    api_endpoints = JsonUtils.read_from_json(test_dir_path + 'api_endpoints.json')
+    UnionReportingAPIUtils.setup(api_data, api_endpoints)
     yield
 
 
@@ -62,13 +63,6 @@ def read_regexp_file(test_dir_path):
     regexp_data = JsonUtils.read_from_json(test_dir_path + 'regex_data.json')
     UnionReportingRegexpUtils.setup(regexp_data)
     yield
-
-
-@pytest.fixture(scope='session')
-def projects_id(test_dir_path):
-    """Read project's id file."""
-    projects_id = JsonUtils.read_from_json(test_dir_path + 'projects_id_data.json')
-    yield projects_id
 
 
 @pytest.fixture(scope='session')
