@@ -1,1 +1,1 @@
-{"variant":"2", "testing_project_id": "1", "log_to_send_path": "project/tests/logs/test_case_get_tests_add_new_project_post_new_test.log", "cookie_key_token": "token", "expected_ok_response_code": "200"}
+{"variant":"2", "testing_project_name": "Nexage", "log_to_send_path": "project/tests/logs/test_case_get_tests_add_new_project_post_new_test.log", "cookie_key_token": "token"}

@@ -13,4 +13,4 @@ class FooterForm(BaseForm):
     def get_portal_version(self):
         """Portal version info according to a token."""
         version = self.footer_version.get_text()
-        return UnionReportingStrUtils.parse_portal_version_from_footer(version)
+        return UnionReportingStrUtils.get_last_element_of_string(version)

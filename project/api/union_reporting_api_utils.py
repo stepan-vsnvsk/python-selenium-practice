@@ -35,7 +35,11 @@ class UnionReportingAPIUtils:
         data = {
                 'projectId': str(project_id),               
                 }
-        return MakeRequest.post(url=url, data=data)      
+        response = MakeRequest.post(url=url, data=data)        
+        try:
+            return [TestModel(test_data) for test_data in response.json()]
+        except JSONDecodeError:
+            return False     
                  
     @staticmethod
     def post_new_test(testmodel_object):

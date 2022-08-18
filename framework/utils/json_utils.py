@@ -9,12 +9,4 @@ class JsonUtils:
         """Read json file."""
         with open(json_data, 'r') as json_file:
             data_load = json.loads(json_file.read())
-            return data_load
-
-    @staticmethod
-    def check_is_that_json(data_to_check):
-        try:
-            json.loads(data_to_check)
-        except ValueError:
-            return False
-        return True
+            return data_load    

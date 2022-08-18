@@ -74,3 +74,15 @@ class BaseElement:
         Logger.info(f"Get text from {self.name}")
         Waits.wait_presence_of_element(self)
         return self.browser.find_element(*self.locator).text
+
+    def get_attribute_value(self, attr):
+        """Find element and get attribute value
+
+        Args:
+            attr(str): attribute's name of element which value we want to get
+        Returns:
+            Element's attribute value (str).
+        """
+        element = self.find_element()
+        Logger.info(f"Get {attr} from {self.name}")
+        return element.get_attribute(attr)

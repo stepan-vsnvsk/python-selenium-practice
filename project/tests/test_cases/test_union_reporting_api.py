@@ -43,19 +43,18 @@ class TestUnionReportingAPI:
 
         log.info("Step #3: [UI] Navigate to Nexage project page. "  
                  "[API] Get list of tests with API-querie in json.")
-        project_id = test_data['testing_project_id']              
+        project_name = test_data['testing_project_name']        
+        project_id = projects_page.get_project_id_value_by_name(project_name)               
         projects_page.click_project_page_by_id(project_id)
         all_tests_page = AllTestsPage()
         all_tests_page.wait_until_page_will_appear()
-        project_tests_ui = all_tests_page.get_all_tests_per_page()
-        project_tests_api_response = UnionReportingAPIUtils.get_list_of_project_tests(project_id)        
-        assert JsonUtils.check_is_that_json(project_tests_api_response.content), \
+        project_tests_ui = all_tests_page.get_all_tests_per_page()        
+        project_tests_api = UnionReportingAPIUtils.get_list_of_project_tests(project_id)
+        assert project_tests_api, \
             "Didn't get json-formatted data about project's tests through HTTP API. " \
-            "Expected result: API method returns json-formatted list of project's tests"
-        project_tests_api = [TestModel(test_data) for test_data in project_tests_api_response.json()]
-        start_times = [test.start_time for test in project_tests_ui]
-        is_start_times_sorted = ListUtil.check_order(start_times, reverse=True)        
-        assert is_start_times_sorted, \
+            "Expected result: API method returns json-formatted list of project's tests"        
+        start_times = [test.start_time for test in project_tests_ui]                
+        assert ListUtil.check_order(start_times, reverse=True), \
             "Test's aren't sorted in decreasing by time order " \
             "Expected result: Tests' start times are sorted from recent to oldest. " \
             f"Actual result: {start_times}"
@@ -117,12 +116,10 @@ class TestUnionReportingAPI:
         screenshot_encoded = DriverUtil.get_screenshot_as_base64()
         mock_test_obj.attachment = screenshot_encoded       
         screenshot_response_code = UnionReportingAPIUtils.add_attachment_to_test(mock_test_obj)        
-        assert MakeRequestUtils.check_status_code(log_response_code, 
-                                                  test_data['expected_ok_response_code']), \
+        assert MakeRequestUtils.check_status_code(log_response_code), \
                "Request for adding log to a test wasn't successful. " \
                "Expected result: Response code is in 'okay codes'"         
-        assert MakeRequestUtils.check_status_code(screenshot_response_code, 
-                                                  test_data['expected_ok_response_code']), \
+        assert MakeRequestUtils.check_status_code(screenshot_response_code), \
                "Request for adding screenshot to a test wasn't successful. " \
                "Expected result: Response code is in 'okay codes'"
         tests_page = AllTestsPage()            
